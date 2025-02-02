@@ -7,7 +7,10 @@ export class Header extends Component {
     return (
       <div className="header-container">
         <header className="header">Search app</header>
-        <Search />
+        <Search
+          searchText={this.props.searchText}
+          onChangeText={this.props.onChangeText}
+        />
       </div>
     );
   }
