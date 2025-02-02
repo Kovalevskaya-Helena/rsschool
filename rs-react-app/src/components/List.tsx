@@ -9,7 +9,7 @@ export class List extends Component {
         {items.map((item) => (
           <li key={item.id}>
             <ListItem label={item.name} />
-            <ListItem label={item.name} />
+            <ListItem label={item.description} />
           </li>
         ))}
       </ul>

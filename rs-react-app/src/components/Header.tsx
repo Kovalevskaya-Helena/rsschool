@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Search } from './Search';
+import './header.css';
 
 export class Header extends Component {
   render() {
     return (
-      <div>
-        <header>Search app</header>
+      <div className="header-container">
+        <header className="header">Search app</header>
         <Search />
       </div>
     );
