@@ -3,6 +3,7 @@ import { Header } from './components/Header';
 import { Main } from './components/Main';
 import { ErrorButton } from './components/ErrorButton';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { requests } from './helpers/requests';
 import './app.css';
 /*УВАЖАЕМЫЙ ПРОВЕРЯЮЩИЙ,ОЧЕНЬ ПРОШУ ПРОВЕРИТЬ МОЮ РАБОТУ ВО ВТОРНИК (04.02.2025) ВЕЧЕРОМ ИЛИ В СРЕДУ(05.02.2025)
 К СОЖАЛЕНИЮ,НЕ ХВАТИЛО ВРЕМЕНИ!
@@ -10,8 +11,20 @@ import './app.css';
 DEAR EXAMINER, I REALLY ASK YOU TO CHECK MY WORK ON TUESDAY (04.02.2025) EVENING OR WEDNESDAY (05.02.2025)
 UNFORTUNATELY, WE DID NOT ENOUGH TIME!
 I WOULD BE VERY GRATEFUL!*/
-export class App extends Component {
-  state = { value: '', items: [], IsLoading: false, error: null };
+
+type LoadStatus = 'pending' | 'loading' | 'loaded' | 'error';
+
+interface AppState {
+  loadStatus: LoadStatus;
+}
+
+export class App extends Component<unknown, AppState> {
+  state = {
+    value: '',
+    items: [],
+    loadStatus: 'pending' as const,
+    errorText: '',
+  };
 
   componentDidMount() {
     this.getCacheFromLocalStorage();
@@ -33,17 +46,18 @@ export class App extends Component {
     const peopleUrl = new URL('https://swapi.dev/api/people/');
     peopleUrl.searchParams.set('search', this.state.value);
 
-    const response = await fetch(peopleUrl);
+    this.setState({ items: [], loadStatus: 'loading', errorText: '' });
 
-    if (!response.ok) {
-      throw new Error(
-        `Could not fetch ${peopleUrl} with ${response.status} status`
-      );
-    }
+    const {
+      data: { results: items },
+      error: errorText,
+    } = await requests.get(peopleUrl);
 
-    const data = await response.json();
-
-    this.setState({ items: data.results });
+    this.setState({
+      items,
+      loadStatus: errorText ? 'error' : 'loaded',
+      errorText,
+    });
   };
 
   onChangeSearch = (text: string) => {
@@ -56,7 +70,7 @@ export class App extends Component {
   };
 
   render() {
-    console.log(this.state.items);
+    const { loadStatus } = this.state;
 
     return (
       <>
@@ -67,7 +81,11 @@ export class App extends Component {
               onChangeText={this.onChangeSearch}
               onSearch={this.onSearchStart}
             />
-            <Main people={this.state.items} />
+            <Main
+              people={this.state.items}
+              loadStatus={loadStatus}
+              errorText={this.state.errorText}
+            />
             <ErrorButton />
           </div>
         </ErrorBoundary>

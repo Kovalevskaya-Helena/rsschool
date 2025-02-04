@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { List } from './List';
+import { Spinner } from './Spinner';
 import './main.css';
 
 export class Main extends Component {
   render() {
+    const { loadStatus, people, errorText } = this.props;
+
     return (
       <div className="main-container">
         <header className="main-header">Results</header>
@@ -11,7 +14,11 @@ export class Main extends Component {
           <span className="main-box-label">Name</span>
           <span className="main-box-description">Description</span>
         </div>
-        <List people={this.props.people} />
+        {loadStatus === 'loading' && <Spinner />}
+        {loadStatus === 'error' && <span>{errorText}</span>}
+        {loadStatus === 'pending' && <span>Use search to find a hero</span>}
+        {loadStatus === 'loaded' && people.length === 0 && <span>Nothing was found</span>}
+        <List people={people} loadStatus={loadStatus} />
       </div>
     );
   }
