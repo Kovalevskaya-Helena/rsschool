@@ -16,10 +16,6 @@ export class Main extends Component<MainProps> {
     return (
       <div className="main-container">
         <header className="main-header">Results</header>
-        <div className="main-box">
-          <span className="main-box-label">Name</span>
-          <span className="main-box-description">Description</span>
-        </div>
         {loadStatus === 'loading' && <Spinner />}
         {loadStatus === 'error' && <span>{errorText}</span>}
         {loadStatus === 'pending' && <span>Use search to find a hero</span>}

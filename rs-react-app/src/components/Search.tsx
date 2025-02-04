@@ -13,7 +13,7 @@ export class Search extends Component<SearchProps> {
       <div className="search-container">
         <input
           className="search-input"
-          placeholder={'search something...'}
+          placeholder={'search Star Wars...'}
           value={this.props.searchText}
           onChange={(event) => this.props.onChangeText(event.target.value)}
         />

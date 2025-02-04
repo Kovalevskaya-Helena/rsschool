@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import './errorbutton.css';
 
 export class ErrorButton extends Component {
-  infos = [];
+  infos: string[] = [];
   state = { infoIndex: undefined };
 
   onClick = () => {

@@ -33,46 +33,4 @@ const requests = {
     }
   },
 };
-
-// const requests = {
-//   get: async (url: string | URL) => {
-//     try {
-//       const response = await fetch(url);
-
-//       if (!response.ok) {
-//         return {
-//           data: { results: [] },
-//           error: `Could not fetch ${url} with ${response.status} status`,
-//         };
-//       }
-
-//       if (response.status === 404) {
-//         return {
-//           data: { results: [] },
-//           error: 'Рроверьте корректность запроса.',
-//         };
-//       }
-
-//       if (response.status === 500) {
-//         return {
-//           data: { results: [] },
-//           error: 'Ошибка сервера, попробуйте позже.',
-//         };
-//       }
-
-//       const data = await response.json();
-
-//       return {
-//         results: data.results,
-//         error: '',
-//       };
-//     } catch {
-//       return {
-//         data: { results: [] },
-//         error: 'Что-то пошло не так. Попробуйте позже',
-//       };
-//     }
-//   },
-// };
-
 export { requests };
