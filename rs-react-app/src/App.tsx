@@ -28,6 +28,7 @@ export class App extends Component<unknown, AppState> {
 
   componentDidMount() {
     this.getCacheFromLocalStorage();
+    this.getPeoples();
   }
 
   getCacheFromLocalStorage = () => {
