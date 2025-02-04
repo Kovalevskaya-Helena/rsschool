@@ -1,7 +1,13 @@
 import { Component } from 'react';
 import './search.css';
 
-export class Search extends Component {
+interface SearchProps {
+  searchText: string;
+  onChangeText: (text: string) => void;
+  onSearch: () => void;
+}
+
+export class Search extends Component<SearchProps> {
   render() {
     return (
       <div className="search-container">

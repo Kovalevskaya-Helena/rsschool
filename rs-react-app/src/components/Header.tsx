@@ -2,7 +2,12 @@ import { Component } from 'react';
 import { Search } from './Search';
 import './header.css';
 
-export class Header extends Component {
+export interface HeaderProps {
+  searchText: string;
+  onChangeText: (text: string) => void;
+  onSearch: () => void;
+}
+export class Header extends Component<HeaderProps> {
   render() {
     return (
       <div className="header-container">
