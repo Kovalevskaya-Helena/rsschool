@@ -1,10 +1,10 @@
 import { Component } from 'react';
-import { Header } from './components/Header';
-import { Main } from './components/Main';
-import { ErrorButton } from './components/ErrorButton';
-import { ErrorBoundary } from './components/ErrorBoundary';
-import { requests } from './helpers/requests';
-import { Items, LoadStatus } from './helpers/types';
+import { Header } from '../Header';
+import { Main } from '../Main/Main';
+import { ErrorButton } from '../ErrorButton';
+import { ErrorBoundary } from '../ErrorBoudary';
+import { requests } from '../../helpers/requests';
+import { Items, LoadStatus } from '../../helpers/types';
 import './app.css';
 /*УВАЖАЕМЫЙ ПРОВЕРЯЮЩИЙ,ОЧЕНЬ ПРОШУ ПРОВЕРИТЬ МОЮ РАБОТУ ВО ВТОРНИК (04.02.2025) ВЕЧЕРОМ ИЛИ В СРЕДУ(05.02.2025)
 К СОЖАЛЕНИЮ,НЕ ХВАТИЛО ВРЕМЕНИ!
@@ -94,5 +94,3 @@ export class App extends Component<unknown, AppState> {
     );
   }
 }
-
-export default App;

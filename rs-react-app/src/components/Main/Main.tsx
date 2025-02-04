@@ -1,7 +1,7 @@
 import { Component } from 'react';
-import { List } from './List';
-import { Spinner } from './Spinner';
-import { Items, LoadStatus } from '../helpers/types';
+import { List } from '../List';
+import { Spinner } from '../Spinner/Spinner';
+import { Items, LoadStatus } from '../../helpers/types';
 import './main.css';
 
 export interface MainProps {
@@ -17,7 +17,9 @@ export class Main extends Component<MainProps> {
       <div className="main-container">
         <header className="main-header">Results</header>
         {loadStatus === 'loading' && <Spinner />}
-        {loadStatus === 'error' && <span>{errorText}</span>}
+        {loadStatus === 'error' && (
+          <span className="errorText">{errorText}</span>
+        )}
         {loadStatus === 'pending' && <span>Use search to find a hero</span>}
         {loadStatus === 'loaded' && people.length === 0 && (
           <span>Nothing was found</span>

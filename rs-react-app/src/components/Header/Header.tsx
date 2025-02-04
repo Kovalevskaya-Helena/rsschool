@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Search } from './Search';
+import { Search } from '../Search';
 import './header.css';
 
 export interface HeaderProps {

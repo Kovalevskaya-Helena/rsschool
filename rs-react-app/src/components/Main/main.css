@@ -16,3 +16,7 @@
   flex-direction: row;
   gap:30px;
 }
+
+.errorText {
+  color: red;
+}
