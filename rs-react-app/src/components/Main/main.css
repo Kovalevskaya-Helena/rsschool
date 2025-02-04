@@ -14,7 +14,7 @@
 .main-box {
   display: flex;
   flex-direction: row;
-  gap:30px;
+  gap: 30px;
 }
 
 .errorText {
