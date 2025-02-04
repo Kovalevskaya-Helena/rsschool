@@ -11,17 +11,7 @@ export class Main extends Component {
           <span className="main-box-label">Name</span>
           <span className="main-box-description">Description</span>
         </div>
-        <List
-          items={[
-            { id: 1, name: 'fkrjnfrk', description: 'fknvk' },
-            {
-              id: 2,
-              name: 'fkrjnfrk',
-              description:
-                'fkggggggggggggggggggggggggggggggggggggggggggggggnvk',
-            },
-          ]}
-        />
+        <List people={this.props.people} />
       </div>
     );
   }

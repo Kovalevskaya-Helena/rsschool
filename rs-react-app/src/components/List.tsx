@@ -3,13 +3,13 @@ import { ListItem } from './ListItem';
 
 export class List extends Component {
   render() {
-    const { items } = this.props;
+    const { people } = this.props;
     return (
       <ul>
-        {items.map((item) => (
-          <li key={item.id}>
-            <ListItem label={item.name} />
-            <ListItem label={item.description} />
+        {people.map((person) => (
+          <li key={person.url}>
+            <ListItem label={person.name} />
+            <ListItem label={person.gender} />
           </li>
         ))}
       </ul>

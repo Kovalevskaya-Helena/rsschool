@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Header } from './components/Header';
 import { Main } from './components/Main';
 import { ErrorButton } from './components/ErrorButton';
@@ -12,32 +12,62 @@ UNFORTUNATELY, WE DID NOT ENOUGH TIME!
 I WOULD BE VERY GRATEFUL!*/
 export class App extends Component {
   state = { value: '', items: [], IsLoading: false, error: null };
+
   componentDidMount() {
-    this.getItem();
+    this.getCacheFromLocalStorage();
   }
 
-  getItem = () => {
-    if (localStorage.getItem('label')) {
-      this.setState({ value: localStorage.getItem('label') });
+  getCacheFromLocalStorage = () => {
+    const cache = localStorage.getItem('label');
+
+    if (cache) {
+      this.setState({ value: cache });
     }
-    return null;
   };
 
-  onChange = (event) => {
-    this.setState({ value: event.target.value });
-    console.log(this.state.value);
+  setCacheToLocalStorage = () => {
+    localStorage.setItem('label', this.state.value.trim());
+  };
+
+  getPeoples = async () => {
+    const peopleUrl = new URL('https://swapi.dev/api/people/');
+    peopleUrl.searchParams.set('search', this.state.value);
+
+    const response = await fetch(peopleUrl);
+
+    if (!response.ok) {
+      throw new Error(
+        `Could not fetch ${peopleUrl} with ${response.status} status`
+      );
+    }
+
+    const data = await response.json();
+
+    this.setState({ items: data.results });
+  };
+
+  onChangeSearch = (text: string) => {
+    this.setState({ value: text });
+  };
+
+  onSearchStart = () => {
+    this.setCacheToLocalStorage();
+    this.getPeoples();
   };
 
   render() {
+    console.log(this.state.items);
+
     return (
       <>
         <ErrorBoundary>
           <div className="container">
             <Header
               searchText={this.state.value}
-              onChangeText={this.onChange}
+              onChangeText={this.onChangeSearch}
+              onSearch={this.onSearchStart}
             />
-            <Main />
+            <Main people={this.state.items} />
             <ErrorButton />
           </div>
         </ErrorBoundary>

@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import './search.css';
 
 export class Search extends Component {
-  onClick = () => {
-    const text = this.props.searchText;
-    localStorage.setItem('label', text.trim());
-  };
   render() {
     return (
       <div className="search-container">
@@ -13,9 +9,13 @@ export class Search extends Component {
           className="search-input"
           placeholder={'search something...'}
           value={this.props.searchText}
-          onChange={() => this.props.onChangeText(event)}
+          onChange={(event) => this.props.onChangeText(event.target.value)}
         />
-        <button className="search-button" type="button" onClick={this.onClick}>
+        <button
+          className="search-button"
+          type="button"
+          onClick={() => this.props.onSearch()}
+        >
           Search
         </button>
       </div>

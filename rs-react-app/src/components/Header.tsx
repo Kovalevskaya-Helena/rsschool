@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Search } from './Search';
 import './header.css';
 
@@ -19,6 +19,7 @@ export class Header extends Component {
         <Search
           searchText={this.props.searchText}
           onChangeText={this.props.onChangeText}
+          onSearch={this.props.onSearch}
         />
       </div>
     );
