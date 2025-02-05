@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { Items, LoadStatus } from '../helpers/types';
+import { Items, LoadStatus } from '../../helpers/types';
 import './list.css';
 
 interface ListProps {
