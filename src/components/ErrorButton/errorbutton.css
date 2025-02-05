@@ -1,0 +1,8 @@
+.error-button {
+  display: flex;
+  align-self: flex-end;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: red;
+}
