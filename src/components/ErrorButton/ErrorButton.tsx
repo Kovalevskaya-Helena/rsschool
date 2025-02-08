@@ -1,22 +1,18 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import './errorbutton.css';
+type infoIndexState = number | undefined;
+export const ErrorButton = () => {
+  const [infoIndex, setInfoIndex] = useState<infoIndexState>(undefined);
+  const infos: string[] = [];
 
-export class ErrorButton extends Component {
-  infos: string[] = [];
-  state = { infoIndex: undefined };
-
-  onClick = () => {
-    this.setState({ infoIndex: 1 });
+  const onClick = () => {
+    setInfoIndex(1);
   };
 
-  render() {
-    const info = this.state.infoIndex
-      ? this.infos[this.state.infoIndex].toLowerCase()
-      : '';
-    return (
-      <button className="error-button" type="button" onClick={this.onClick}>
-        {`Error button${info}`}
-      </button>
-    );
-  }
-}
+  const info = infoIndex ? infos[infoIndex].toLowerCase() : '';
+  return (
+    <button className="error-button" type="button" onClick={onClick}>
+      {`Error button${info}`}
+    </button>
+  );
+};

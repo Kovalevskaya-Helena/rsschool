@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from '../Header';
 import { Main } from '../Main/Main';
 import { ErrorButton } from '../ErrorButton';
@@ -6,85 +6,77 @@ import { ErrorBoundary } from '../ErrorBoudary';
 import { requests } from '../../helpers/requests';
 import { Items, LoadStatus } from '../../helpers/types';
 import './app.css';
-export interface AppState {
-  value: string;
+
+const getInitialSearchText = () => localStorage.getItem('label') ?? '';
+
+interface ItemsLoadState {
   items: Items[];
   loadStatus: LoadStatus;
   errorText: string;
 }
-export class App extends Component<unknown, AppState> {
-  state = {
-    value: '',
+
+export const App = () => {
+  const [searchText, setSearchText] = useState<string>(getInitialSearchText);
+  const [itemsLoadState, setItemsLoadState] = useState<ItemsLoadState>({
     items: [],
-    loadStatus: 'pending' as const,
+    loadStatus: 'pending',
     errorText: '',
+  });
+
+  useEffect(() => {
+    getPeoples();
+  }, []);
+
+  const setCacheToLocalStorage = () => {
+    localStorage.setItem('label', searchText.trim());
   };
 
-  componentDidMount() {
-    this.getCacheFromLocalStorage();
-    this.getPeoples();
-  }
-
-  getCacheFromLocalStorage = () => {
-    const cache = localStorage.getItem('label');
-
-    if (cache) {
-      this.setState({ value: cache });
-    }
-  };
-
-  setCacheToLocalStorage = () => {
-    localStorage.setItem('label', this.state.value.trim());
-  };
-
-  getPeoples = async () => {
+  const getPeoples = async () => {
     const peopleUrl = new URL('https://swapi.dev/api/people/');
-    peopleUrl.searchParams.set('search', this.state.value);
+    peopleUrl.searchParams.set('search', searchText);
 
-    this.setState({ items: [], loadStatus: 'loading', errorText: '' });
+    setItemsLoadState({
+      items: [],
+      loadStatus: 'loading',
+      errorText: '',
+    });
 
     const {
       data: { results: items },
       error: errorText,
     } = await requests.get(peopleUrl);
 
-    this.setState({
+    setItemsLoadState({
       items,
       loadStatus: errorText ? 'error' : 'loaded',
       errorText,
     });
   };
 
-  onChangeSearch = (text: string) => {
-    this.setState({ value: text });
+  const onChangeSearch = (text: string) => {
+    setSearchText(text);
   };
 
-  onSearchStart = () => {
-    this.setCacheToLocalStorage();
-    this.getPeoples();
+  const onSearchStart = () => {
+    setCacheToLocalStorage();
+    getPeoples();
   };
 
-  render() {
-    const { loadStatus } = this.state;
-
-    return (
-      <>
-        <ErrorBoundary>
-          <div className="container">
-            <Header
-              searchText={this.state.value}
-              onChangeText={this.onChangeSearch}
-              onSearch={this.onSearchStart}
-            />
-            <Main
-              people={this.state.items}
-              loadStatus={loadStatus}
-              errorText={this.state.errorText}
-            />
-            <ErrorButton />
-          </div>
-        </ErrorBoundary>
-      </>
-    );
-  }
-}
+  return (
+    <ErrorBoundary>
+      <div className="container">
+        <Header
+          searchText={searchText}
+          onChangeText={onChangeSearch}
+          onSearch={onSearchStart}
+        />
+        <Main
+          people={itemsLoadState.items}
+          loadStatus={itemsLoadState.loadStatus}
+          errorText={itemsLoadState.errorText}
+        />
+        <ErrorButton />
+      </div>
+    </ErrorBoundary>
+  );
+};
