@@ -10,6 +10,8 @@ const getInitialSearchText = () => localStorage.getItem('label') ?? '';
 
 interface ItemsLoadState {
   items: Items[];
+  previous: string | null;
+  next: string | null;
   loadStatus: LoadStatus;
   errorText: string;
 }
@@ -20,34 +22,44 @@ export const PeopleSearch = () => {
     items: [],
     loadStatus: 'pending',
     errorText: '',
+    previous: null,
+    next: null,
   });
 
+  const getInitialPeopleUrl = (): URL => {
+    const peopleUrl = new URL('https://swapi.dev/api/people/');
+    peopleUrl.searchParams.set('search', searchText);
+
+    return peopleUrl;
+  };
+
   useEffect(() => {
-    getPeoples();
+    getPeoples(getInitialPeopleUrl());
   }, []);
 
   const setCacheToLocalStorage = () => {
     localStorage.setItem('label', searchText.trim());
   };
 
-  const getPeoples = async () => {
-    const peopleUrl = new URL('https://swapi.dev/api/people/');
-    peopleUrl.searchParams.set('search', searchText);
-
+  const getPeoples = async (url: string | URL) => {
     setItemsLoadState({
       items: [],
       loadStatus: 'loading',
+      previous: null,
+      next: null,
       errorText: '',
     });
 
     const {
-      data: { results: items },
+      data: { results: items, previous, next },
       error: errorText,
-    } = await requests.get(peopleUrl);
+    } = await requests.get(url);
 
     setItemsLoadState({
       items,
       loadStatus: errorText ? 'error' : 'loaded',
+      previous,
+      next,
       errorText,
     });
   };
@@ -58,7 +70,7 @@ export const PeopleSearch = () => {
 
   const onSearchStart = () => {
     setCacheToLocalStorage();
-    getPeoples();
+    getPeoples(getInitialPeopleUrl());
   };
 
   return (
@@ -72,6 +84,9 @@ export const PeopleSearch = () => {
         people={itemsLoadState.items}
         loadStatus={itemsLoadState.loadStatus}
         errorText={itemsLoadState.errorText}
+        previous={itemsLoadState.previous}
+        next={itemsLoadState.next}
+        onPagination={(url) => getPeoples(url)}
       />
       <ErrorButton />
     </div>

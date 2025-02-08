@@ -1,3 +1,4 @@
+import { Button } from '../Button';
 import './search.css';
 
 interface SearchProps {
@@ -15,13 +16,9 @@ export const Search = ({ searchText, onChangeText, onSearch }: SearchProps) => {
         value={searchText}
         onChange={(event) => onChangeText(event.target.value)}
       />
-      <button
-        className="search-button"
-        type="button"
-        onClick={() => onSearch()}
-      >
+      <Button className="search-button" onClick={onSearch}>
         Search
-      </button>
+      </Button>
     </div>
   );
 };

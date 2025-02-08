@@ -6,9 +6,19 @@ import './main.css';
 export interface MainProps {
   people: Items[];
   loadStatus: LoadStatus;
+  previous: string | null;
+  next: string | null;
   errorText: string;
+  onPagination: (url: string) => void;
 }
-export const Main = ({ people, loadStatus, errorText }: MainProps) => {
+export const Main = ({
+  people,
+  loadStatus,
+  previous,
+  next,
+  errorText,
+  onPagination,
+}: MainProps) => {
   return (
     <div className="main-container">
       <header className="main-header">Results</header>
@@ -18,7 +28,12 @@ export const Main = ({ people, loadStatus, errorText }: MainProps) => {
       {loadStatus === 'loaded' && people.length === 0 && (
         <span>Nothing was found</span>
       )}
-      <List people={people} />
+      <List
+        people={people}
+        previous={previous}
+        next={next}
+        onPagination={onPagination}
+      />
     </div>
   );
 };

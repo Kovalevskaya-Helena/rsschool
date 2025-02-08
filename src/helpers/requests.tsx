@@ -9,7 +9,7 @@ const requests = {
       const response = await fetch(url);
 
       if (response.status >= 400 && response.status < 500) {
-        return getErrorResponse('Сheck the correctness of the request.');
+        return getErrorResponse('Check the correctness of the request.');
       }
 
       if (response.status >= 500 && response.status < 600) {
@@ -23,6 +23,7 @@ const requests = {
       }
 
       const data = await response.json();
+      console.log(data);
 
       return {
         data,
