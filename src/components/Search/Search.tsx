@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Button } from '../Button';
 import './search.css';
 
 interface SearchProps {
@@ -7,24 +7,18 @@ interface SearchProps {
   onSearch: () => void;
 }
 
-export class Search extends Component<SearchProps> {
-  render() {
-    return (
-      <div className="search-container">
-        <input
-          className="search-input"
-          placeholder={'search Star Wars...'}
-          value={this.props.searchText}
-          onChange={(event) => this.props.onChangeText(event.target.value)}
-        />
-        <button
-          className="search-button"
-          type="button"
-          onClick={() => this.props.onSearch()}
-        >
-          Search
-        </button>
-      </div>
-    );
-  }
-}
+export const Search = ({ searchText, onChangeText, onSearch }: SearchProps) => {
+  return (
+    <div className="search-container">
+      <input
+        className="search-input"
+        placeholder={'search Star Wars...'}
+        value={searchText}
+        onChange={(event) => onChangeText(event.target.value)}
+      />
+      <Button className="search-button" onClick={onSearch}>
+        Search
+      </Button>
+    </div>
+  );
+};

@@ -1,0 +1,1 @@
+export { PeopleSearch } from './PeopleSearch';

@@ -1,20 +1,24 @@
-table {
-  margin-bottom: 20px;
-}
-table thead th {
+.pagination-button {
   padding: 10px;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 20px;
-  text-align: left;
-  color: #444441;
-  border-top: 2px solid #716561;
-  border-bottom: 2px solid #716561;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: white;
 }
-table tbody td {
-  padding: 10px;
-  font-size: 14px;
-  line-height: 20px;
-  color: #444441;
-  border-top: 1px solid #716561;
+.pagination-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.details-list {
+  list-style-type: none;
+
+  & .details-item {
+    line-height: 1.8;
+  }
+
+  & .details-link {
+    color: inherit;
+    text-decoration: none;
+  }
 }

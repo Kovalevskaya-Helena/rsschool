@@ -1,0 +1,35 @@
+.layout {
+  font-family: 'Lato', serif;
+  font-weight: 100;
+  font-style: normal;
+  background-color: #121212;
+  color: #ffffff;
+
+  height: 100dvh;
+  width: 100dw;
+
+  display: grid;
+  grid-template-columns: 1fr 0fr;
+  transition: 300ms;
+  justify-content: stretch;
+
+  &:has(.item-details) {
+    grid-template-columns: 3fr 1fr;
+
+    .container {
+      position: relative;
+
+      &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        content: '';
+        background-color: white;
+        z-index: 1;
+        opacity: 0.5;
+      }
+    }
+  }
+}

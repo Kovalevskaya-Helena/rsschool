@@ -1,41 +1,58 @@
-import { Component } from 'react';
-import { Items, LoadStatus } from '../../helpers/types';
+import { Link, useSearchParams } from 'react-router';
+import { Button } from '../Button';
 import './list.css';
+import { parseId } from './parseId';
 
-interface ListProps {
+import type { Items } from '../../helpers/types';
+
+export interface ListProps {
   people: Items[];
-  loadStatus: LoadStatus;
+  previous: string | null;
+  next: string | null;
+  onPagination: (url: string) => void;
 }
+export const List = ({ people, previous, next, onPagination }: ListProps) => {
+  const [searchParams] = useSearchParams();
 
-export class List extends Component<ListProps> {
-  render() {
-    const { people } = this.props;
-
-    return (
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Gender</th>
-            <th>Birth Year</th>
-            <th>Eye Color</th>
-            <th>Height</th>
-            <th>Mass</th>
-          </tr>
-        </thead>
-        <tbody>
-          {people.map((person) => (
-            <tr key={person.url}>
-              <td>{person.name}</td>
-              <td>{person.gender}</td>
-              <td>{person.birth_year}</td>
-              <td>{person.eye_color}</td>
-              <td>{person.height}</td>
-              <td>{person.mass}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
+  if (people.length === 0) {
+    return <span>Nothing was found</span>;
   }
-}
+
+  return (
+    <>
+      <ul className="details-list" data-testid="details-list">
+        {people.map((person) => (
+          <li key={person.url} className="details-item">
+            <Link
+              to={{
+                pathname: `/details/${parseId(person.url)}`,
+                search: searchParams.toString(),
+              }}
+              className="details-link"
+            >
+              {person.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <div className="pagination-container">
+        <Button
+          ariaLabel="previous"
+          className="pagination-button"
+          disabled={previous === null}
+          onClick={() => onPagination(previous as string)}
+        >
+          &lt;
+        </Button>
+        <Button
+          ariaLabel="next"
+          className="pagination-button"
+          disabled={next === null}
+          onClick={() => onPagination(next as string)}
+        >
+          &gt;
+        </Button>
+      </div>
+    </>
+  );
+};
