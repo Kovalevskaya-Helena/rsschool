@@ -1,7 +1,9 @@
 import { Link, useSearchParams } from 'react-router';
-import { Items } from '../../helpers/types';
 import { Button } from '../Button';
 import './list.css';
+import { parseId } from './parseId';
+
+import type { Items } from '../../helpers/types';
 
 export interface ListProps {
   people: Items[];
@@ -12,17 +14,18 @@ export interface ListProps {
 export const List = ({ people, previous, next, onPagination }: ListProps) => {
   const [searchParams] = useSearchParams();
 
-  const getId = (url: string) => {
-    return url.split('/').at(-2);
-  };
+  if (people.length === 0) {
+    return <span>Nothing was found</span>;
+  }
+
   return (
     <>
-      <ul className="details-list">
+      <ul className="details-list" data-testid="details-list">
         {people.map((person) => (
           <li key={person.url} className="details-item">
             <Link
               to={{
-                pathname: `/details/${getId(person.url)}`,
+                pathname: `/details/${parseId(person.url)}`,
                 search: searchParams.toString(),
               }}
               className="details-link"
@@ -34,16 +37,18 @@ export const List = ({ people, previous, next, onPagination }: ListProps) => {
       </ul>
       <div className="pagination-container">
         <Button
+          ariaLabel="previous"
           className="pagination-button"
           disabled={previous === null}
-          onClick={() => onPagination(previous || '')}
+          onClick={() => onPagination(previous as string)}
         >
           &lt;
         </Button>
         <Button
+          ariaLabel="next"
           className="pagination-button"
           disabled={next === null}
-          onClick={() => onPagination(next || '')}
+          onClick={() => onPagination(next as string)}
         >
           &gt;
         </Button>

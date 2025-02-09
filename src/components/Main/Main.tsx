@@ -25,15 +25,14 @@ export const Main = ({
       {loadStatus === 'loading' && <Spinner />}
       {loadStatus === 'error' && <span className="errorText">{errorText}</span>}
       {loadStatus === 'pending' && <span>Use search to find a hero</span>}
-      {loadStatus === 'loaded' && people.length === 0 && (
-        <span>Nothing was found</span>
+      {loadStatus === 'loaded' && (
+        <List
+          people={people}
+          previous={previous}
+          next={next}
+          onPagination={onPagination}
+        />
       )}
-      <List
-        people={people}
-        previous={previous}
-        next={next}
-        onPagination={onPagination}
-      />
     </div>
   );
 };

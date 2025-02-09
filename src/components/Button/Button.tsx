@@ -7,11 +7,13 @@ export const Button = ({
   className,
   disabled,
   onClick,
+  ariaLabel,
 }: {
   children: ReactNode;
-  className: string;
+  className?: string;
   disabled?: boolean;
   onClick: () => void;
+  ariaLabel?: string;
 }) => {
   return (
     <button
@@ -19,6 +21,7 @@ export const Button = ({
       type="button"
       onClick={onClick}
       disabled={disabled}
+      aria-label={ariaLabel}
     >
       {children}
     </button>
