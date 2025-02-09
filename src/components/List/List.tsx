@@ -1,3 +1,4 @@
+import { Link, useSearchParams } from 'react-router';
 import { Items } from '../../helpers/types';
 import { Button } from '../Button';
 import './list.css';
@@ -9,32 +10,28 @@ export interface ListProps {
   onPagination: (url: string) => void;
 }
 export const List = ({ people, previous, next, onPagination }: ListProps) => {
+  const [searchParams] = useSearchParams();
+
+  const getId = (url: string) => {
+    return url.split('/').at(-2);
+  };
   return (
     <>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Gender</th>
-            <th>Birth Year</th>
-            <th>Eye Color</th>
-            <th>Height</th>
-            <th>Mass</th>
-          </tr>
-        </thead>
-        <tbody>
-          {people.map((person) => (
-            <tr key={person.url}>
-              <td>{person.name}</td>
-              <td>{person.gender}</td>
-              <td>{person.birth_year}</td>
-              <td>{person.eye_color}</td>
-              <td>{person.height}</td>
-              <td>{person.mass}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <ul className="details-list">
+        {people.map((person) => (
+          <li key={person.url} className="details-item">
+            <Link
+              to={{
+                pathname: `/details/${getId(person.url)}`,
+                search: searchParams.toString(),
+              }}
+              className="details-link"
+            >
+              {person.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
       <div className="pagination-container">
         <Button
           className="pagination-button"
