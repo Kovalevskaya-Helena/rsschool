@@ -9,10 +9,22 @@ export interface ListProps {
   people: Items[];
   previous: string | null;
   next: string | null;
-  onPagination: (url: string) => void;
 }
-export const List = ({ people, previous, next, onPagination }: ListProps) => {
-  const [searchParams] = useSearchParams();
+
+export const List = ({ people, previous, next }: ListProps) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const onPagination = (url: string | null) => {
+    if (!url) return;
+
+    const page = new URLSearchParams(new URL(url).searchParams).get('page');
+    if (!page) return;
+
+    setSearchParams((prev) => {
+      prev.set('page', page);
+      return prev;
+    });
+  };
 
   if (people.length === 0) {
     return <span>Nothing was found</span>;
@@ -40,7 +52,7 @@ export const List = ({ people, previous, next, onPagination }: ListProps) => {
           ariaLabel="previous"
           className="pagination-button"
           disabled={previous === null}
-          onClick={() => onPagination(previous as string)}
+          onClick={() => onPagination(previous)}
         >
           &lt;
         </Button>
@@ -48,7 +60,7 @@ export const List = ({ people, previous, next, onPagination }: ListProps) => {
           ariaLabel="next"
           className="pagination-button"
           disabled={next === null}
-          onClick={() => onPagination(next as string)}
+          onClick={() => onPagination(next)}
         >
           &gt;
         </Button>

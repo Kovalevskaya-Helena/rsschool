@@ -1,37 +1,23 @@
 import { List } from '../List';
 import { Spinner } from '../Spinner/Spinner';
-import { Items, LoadStatus } from '../../helpers/types';
 import './main.css';
+import { useSearchParams } from 'react-router';
+import { useGetStarWarsPeopleQuery } from '../../redux/api';
 
-export interface MainProps {
-  people: Items[];
-  loadStatus: LoadStatus;
-  previous: string | null;
-  next: string | null;
-  errorText: string;
-  onPagination: (url: string) => void;
-}
-export const Main = ({
-  people,
-  loadStatus,
-  previous,
-  next,
-  errorText,
-  onPagination,
-}: MainProps) => {
+export const Main = () => {
+  const [searchParams] = useSearchParams();
+
+  const { data, isSuccess, isFetching, isError } = useGetStarWarsPeopleQuery(
+    searchParams.toString()
+  );
+
   return (
     <div className="main-container">
       <header className="main-header">Results</header>
-      {loadStatus === 'loading' && <Spinner />}
-      {loadStatus === 'error' && <span className="errorText">{errorText}</span>}
-      {loadStatus === 'pending' && <span>Use search to find a hero</span>}
-      {loadStatus === 'loaded' && (
-        <List
-          people={people}
-          previous={previous}
-          next={next}
-          onPagination={onPagination}
-        />
+      {isFetching && <Spinner />}
+      {isError && <span className="errorText">Something were wrong ...</span>}
+      {!isFetching && !isError && isSuccess && (
+        <List people={data.results} previous={data.previous} next={data.next} />
       )}
     </div>
   );
