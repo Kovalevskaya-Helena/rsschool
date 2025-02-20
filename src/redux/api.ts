@@ -3,12 +3,12 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
-import { Items } from '../helpers/types';
+import { Item } from '../helpers/types';
 
 const URL = 'https://swapi.dev/api/people';
 
 interface ItemsResponse {
-  results: Items[];
+  results: Item[];
   next: string | null;
   previous: string | null;
 }
@@ -22,7 +22,7 @@ export const api = createApi({
     getStarWarsPeople: builder.query<ItemsResponse, string | null>({
       query: (query) => `?${query}`,
     }),
-    getStarwarsPerson: builder.query<Items, string>({
+    getStarwarsPerson: builder.query<Item, string>({
       query: (id) => `${id}`,
       transformErrorResponse: (
         error

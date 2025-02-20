@@ -2,17 +2,24 @@ import { Link, useSearchParams } from 'react-router';
 import { Button } from '../Button';
 import './list.css';
 import { parseId } from './parseId';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../redux/store';
 
-import type { Items } from '../../helpers/types';
+import type { Item } from '../../helpers/types';
+import { toggleItem } from '../../redux/selectedItemsSlice';
 
 export interface ListProps {
-  people: Items[];
+  people: Item[];
   previous: string | null;
   next: string | null;
 }
 
 export const List = ({ people, previous, next }: ListProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const dispatch = useDispatch();
+  const selectedItems = useSelector(
+    (state: RootState) => state.selectedItems.selectedItems
+  );
 
   const onPagination = (url: string | null) => {
     if (!url) return;
@@ -35,6 +42,11 @@ export const List = ({ people, previous, next }: ListProps) => {
       <ul className="details-list" data-testid="details-list">
         {people.map((person) => (
           <li key={person.url} className="details-item">
+            <input
+              type="checkbox"
+              checked={person.url in selectedItems}
+              onChange={() => dispatch(toggleItem(person))}
+            />
             <Link
               to={{
                 pathname: `/details/${parseId(person.url)}`,
