@@ -1,9 +1,10 @@
 import { List } from '../List';
 import { Spinner } from '../Spinner/Spinner';
+import { Popup } from '../Popup';
 import './main.css';
 import { useSearchParams } from 'react-router';
 import { useGetStarWarsPeopleQuery } from '../../redux/api';
-
+//TBD:restructure layoutdue jumping list
 export const Main = () => {
   const [searchParams] = useSearchParams();
 
@@ -19,6 +20,7 @@ export const Main = () => {
       {!isFetching && !isError && isSuccess && (
         <List people={data.results} previous={data.previous} next={data.next} />
       )}
+      <Popup />
     </div>
   );
 };

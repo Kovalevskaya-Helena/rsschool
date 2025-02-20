@@ -3,11 +3,10 @@ import { Button } from '../Button';
 import './list.css';
 import { parseId } from './parseId';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../redux/store';
 
 import type { Item } from '../../helpers/types';
-import { toggleItem } from '../../redux/selectedItemsSlice';
-
+import { toggleItem, getSelectedItems } from '../../redux/selectedItemsSlice';
+//TBD: create separate Pagination component, add amount of pages on pagination
 export interface ListProps {
   people: Item[];
   previous: string | null;
@@ -17,9 +16,7 @@ export interface ListProps {
 export const List = ({ people, previous, next }: ListProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
-  const selectedItems = useSelector(
-    (state: RootState) => state.selectedItems.selectedItems
-  );
+  const selectedItems = useSelector(getSelectedItems);
 
   const onPagination = (url: string | null) => {
     if (!url) return;
