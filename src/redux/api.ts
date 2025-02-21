@@ -11,6 +11,7 @@ interface ItemsResponse {
   results: Item[];
   next: string | null;
   previous: string | null;
+  count: number;
 }
 
 const reducerPath = 'starWarsApi';

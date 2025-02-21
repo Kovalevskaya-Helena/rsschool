@@ -2,7 +2,6 @@ import { List } from '../List';
 import { Popup } from '../Popup';
 import './main.css';
 import { Pagination } from '../Pagination';
-//TBD:restructure layoutdue jumping list
 export const Main = () => {
   return (
     <div className="main-container">

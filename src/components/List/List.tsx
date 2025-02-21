@@ -22,8 +22,12 @@ export const List = () => {
   const dispatch = useDispatch();
   const selectedItems = useSelector(getSelectedItems);
 
-  if (people.length === 0) {
-    return <span>Nothing was found</span>;
+  if (isSuccess && people.length === 0) {
+    return (
+      <div className="details-list-wrapper">
+        <span>Nothing was found</span>
+      </div>
+    );
   }
 
   return (

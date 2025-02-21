@@ -22,6 +22,7 @@ export const PeopleSearch = () => {
     if (label) {
       setSearchParams((prev) => {
         prev.set('search', label);
+        prev.set('page', '1');
         return prev;
       });
     }
@@ -46,7 +47,7 @@ export const PeopleSearch = () => {
         prev.delete('search');
       }
 
-      prev.delete('page');
+      prev.set('page', '1');
       return prev;
     });
   };

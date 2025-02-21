@@ -4,8 +4,13 @@ import { Button } from '../Button';
 import './pagination.css';
 
 export const Pagination = () => {
-  const { data: { previous, next } = {}, updateSearchParams } =
-    useGetStarWarsPeople();
+  const {
+    data: { previous, next, count } = {},
+    query,
+    updateQuery,
+  } = useGetStarWarsPeople();
+
+  const pagesAmount = count ? Math.ceil(count / 10) : query.page;
 
   const onPagination = (url: string | null) => {
     if (!url) return;
@@ -13,11 +18,9 @@ export const Pagination = () => {
     const page = new URLSearchParams(new URL(url).searchParams).get('page');
     if (!page) return;
 
-    updateSearchParams((prev) => {
-      prev.set('page', page);
-      return prev;
-    });
+    updateQuery('page', page);
   };
+
   return (
     <div className="pagination-container">
       <Button
@@ -28,6 +31,9 @@ export const Pagination = () => {
       >
         &lt;
       </Button>
+      <div>
+        {query?.page} / {pagesAmount}
+      </div>
       <Button
         ariaLabel="next"
         className="pagination-button"
