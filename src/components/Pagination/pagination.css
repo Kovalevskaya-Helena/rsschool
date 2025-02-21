@@ -1,0 +1,12 @@
+.pagination-container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+  & .pagination-button {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+    background-color: white;
+  }
+}
