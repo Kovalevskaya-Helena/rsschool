@@ -1,8 +1,7 @@
-import { Link, useParams } from 'react-router';
+import { Link, useParams, useSearchParams } from 'react-router';
 import { Spinner } from '../Spinner';
 import './details.css';
-import { useSearchParams } from 'react-router';
-import { useGetStarwarsPersonQuery } from '../../redux/api';
+import { useGetStarwarsPerson } from './useGetStarwarsPerson';
 
 export const Details = () => {
   const { id } = useParams();
@@ -15,7 +14,7 @@ export const Details = () => {
     isLoading,
     isUninitialized,
     error,
-  } = useGetStarwarsPersonQuery(id as string);
+  } = useGetStarwarsPerson(id as string);
 
   if (isFetching || isLoading || isUninitialized) {
     return (

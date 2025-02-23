@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleItem, getSelectedItems } from '../../redux/selectedItemsSlice';
 import { useGetStarWarsPeople } from '../../hooks/useGetStarWarsPeople';
 import { Spinner } from '../Spinner';
-//TBD: add amount of pages on pagination
+
 export interface ListProps {
   previous: string | null;
   next: string | null;

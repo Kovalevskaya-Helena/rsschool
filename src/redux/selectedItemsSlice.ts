@@ -11,12 +11,15 @@ export const checkboxSlice = createSlice({
     toggleItem: (state, action: PayloadAction<Item>) => {
       const id = action.payload.url;
 
-      if (id in state) {
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete state[id];
+      const nextItems = new Map(Object.entries(state));
+
+      if (nextItems.has(id)) {
+        nextItems.delete(id);
       } else {
-        state[id] = action.payload;
+        nextItems.set(id, action.payload);
       }
+
+      return Object.fromEntries(nextItems.entries());
     },
     unSelectAllItems: () => {
       return {};

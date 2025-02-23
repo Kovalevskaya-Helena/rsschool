@@ -4,12 +4,13 @@ import { Item } from '../../helpers/types';
 import './downloadbutton.css';
 
 interface DownloadButtonState {
-  items: Record<string, Item>;
-  amountItems: number;
+  items: Item[];
 }
-export const DownloadButton = ({ items, amountItems }: DownloadButtonState) => {
-  const downloadCSV = (data: { [key: string]: Item }, filename: string) => {
-    const csv = convertToCSV(data, ';');
+
+export const DownloadButton = ({ items }: DownloadButtonState) => {
+  const downloadCSV = (items: Item[], filename: string) => {
+    const csv = convertToCSV(items, ';');
+    console.log(csv.length);
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
 
@@ -21,8 +22,9 @@ export const DownloadButton = ({ items, amountItems }: DownloadButtonState) => {
   };
 
   const handleDownload = () => {
-    downloadCSV(items, `${amountItems}_starwars_people.csv`);
+    downloadCSV(items, `${items.length}_starwars_people.csv`);
   };
+
   return (
     <Button onClick={handleDownload} className="download-button">
       Download

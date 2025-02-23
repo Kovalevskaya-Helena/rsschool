@@ -30,10 +30,7 @@ export const Popup = () => {
         >
           Unselect all
         </Button>
-        <DownloadButton
-          items={selectedItems}
-          amountItems={selectedItemsAmount}
-        />
+        <DownloadButton items={Object.values(selectedItems)} />
       </div>
     </div>
   );

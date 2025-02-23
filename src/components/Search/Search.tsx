@@ -1,3 +1,4 @@
+import { FormEvent } from 'react';
 import { Button } from '../Button';
 import './search.css';
 
@@ -8,24 +9,22 @@ interface SearchProps {
 }
 
 export const Search = ({ searchText, onChangeText, onSearch }: SearchProps) => {
-  const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
-    if (event.key === 'Enter') {
-      onSearch();
-    }
+  const onSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    onSearch();
   };
 
   return (
-    <div className="search-container">
+    <form className="search-container" onSubmit={onSubmit}>
       <input
         className="search-input"
         placeholder={'search Star Wars...'}
         value={searchText}
         onChange={(event) => onChangeText(event.target.value)}
-        onKeyDown={onKeyDown}
       />
       <Button className="search-button" onClick={onSearch}>
         Search
       </Button>
-    </div>
+    </form>
   );
 };
