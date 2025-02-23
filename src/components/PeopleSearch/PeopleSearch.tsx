@@ -2,80 +2,34 @@ import { useState, useEffect } from 'react';
 import { Header } from '../Header';
 import { Main } from '../Main/Main';
 import { ErrorButton } from '../ErrorButton';
-import { requests } from '../../helpers/requests';
-import { Items, LoadStatus } from '../../helpers/types';
 import { useLocalStorage } from '../../helpers/useLocalStorage';
 import './peopleSearch.css';
 import { useNavigate, useSearchParams, useParams } from 'react-router';
 
-interface ItemsLoadState {
-  items: Items[];
-  previous: string | null;
-  next: string | null;
-  loadStatus: LoadStatus;
-  errorText: string;
-}
-
 export const PeopleSearch = () => {
+  const searchTextStorage = useLocalStorage('label');
+
+  const initialSearchText = searchTextStorage.getItem() ?? '';
+
   const [searchParams, setSearchParams] = useSearchParams();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const searchTextStorage = useLocalStorage('label');
-
-  const [searchText, setSearchText] = useState<string>(
-    searchTextStorage.getItem() ?? ''
-  );
-
-  const [itemsLoadState, setItemsLoadState] = useState<ItemsLoadState>({
-    items: [],
-    loadStatus: 'pending',
-    errorText: '',
-    previous: null,
-    next: null,
-  });
-
-  const getInitialPeopleUrl = (): URL => {
-    const peopleUrl = new URL('https://swapi.dev/api/people/');
-
-    if (searchText) {
-      peopleUrl.searchParams.set('search', searchText);
-    }
-
-    return peopleUrl;
-  };
-
-  const getPeoples = async (url: string | URL) => {
-    setItemsLoadState({
-      items: [],
-      loadStatus: 'loading',
-      previous: null,
-      next: null,
-      errorText: '',
-    });
-
-    const {
-      data: { results: items, previous, next },
-      error: errorText,
-    } = await requests.get(url);
-
-    setItemsLoadState({
-      items,
-      loadStatus: errorText ? 'error' : 'loaded',
-      previous,
-      next,
-      errorText,
-    });
-
-    setSearchParams(new URL(url).searchParams);
-  };
+  const [searchText, setSearchText] = useState<string>(initialSearchText);
 
   useEffect(() => {
-    getPeoples(getInitialPeopleUrl());
+    const label = searchTextStorage.getItem();
+    if (label) {
+      setSearchParams((prev) => {
+        prev.set('search', label);
+        prev.set('page', '1');
+        return prev;
+      });
+    }
   }, []);
 
-  const setCacheToLocalStorage = () => {
-    searchTextStorage.setItem(searchText.trim());
+  const setCacheToLocalStorage = (value: string) => {
+    searchTextStorage.setItem(value.trim());
   };
 
   const onChangeSearch = (text: string) => {
@@ -83,8 +37,19 @@ export const PeopleSearch = () => {
   };
 
   const onSearchStart = () => {
-    setCacheToLocalStorage();
-    getPeoples(getInitialPeopleUrl());
+    const nextSearch = searchText.trim();
+    setCacheToLocalStorage(nextSearch);
+
+    setSearchParams((prev) => {
+      if (nextSearch) {
+        prev.set('search', nextSearch);
+      } else {
+        prev.delete('search');
+      }
+
+      prev.set('page', '1');
+      return prev;
+    });
   };
 
   const closeDetails = () => {
@@ -105,14 +70,7 @@ export const PeopleSearch = () => {
         onChangeText={onChangeSearch}
         onSearch={onSearchStart}
       />
-      <Main
-        people={itemsLoadState.items}
-        loadStatus={itemsLoadState.loadStatus}
-        errorText={itemsLoadState.errorText}
-        previous={itemsLoadState.previous}
-        next={itemsLoadState.next}
-        onPagination={(url) => getPeoples(url)}
-      />
+      <Main />
       <ErrorButton />
     </div>
   );

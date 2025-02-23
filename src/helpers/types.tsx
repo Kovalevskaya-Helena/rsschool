@@ -1,6 +1,6 @@
 export type LoadStatus = 'pending' | 'loading' | 'loaded' | 'error';
 
-export interface Items {
+export interface Item {
   name: string;
   gender: string;
   birth_year: string;
