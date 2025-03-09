@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Item } from '../helpers/types';
+import { Item as Person } from '../helpers/types';
 import { RootState } from './store';
 
-const initialState: Record<string, Item> = {};
+const initialState: Record<string, Person> = {};
 
 export const checkboxSlice = createSlice({
   name: 'selectedItems',
   initialState,
   reducers: {
-    toggleItem: (state, action: PayloadAction<Item>) => {
+    toggleItem: (state, action: PayloadAction<Person>) => {
       const id = action.payload.url;
 
       const nextItems = new Map(Object.entries(state));

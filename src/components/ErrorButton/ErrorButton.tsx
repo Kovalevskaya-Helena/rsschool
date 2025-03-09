@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import './errorbutton.css';
+import styles from './errorbutton.module.css';
+
 type infoIndexState = number | undefined;
 export const ErrorButton = () => {
   const [infoIndex, setInfoIndex] = useState<infoIndexState>(undefined);
@@ -10,8 +11,9 @@ export const ErrorButton = () => {
   };
 
   const info = infoIndex ? infos[infoIndex].toLowerCase() : '';
+
   return (
-    <button className="error-button" type="button" onClick={onClick}>
+    <button className={styles.error_button} type="button" onClick={onClick}>
       {`Error button${info}`}
     </button>
   );

@@ -1,4 +1,4 @@
-.pagination-container {
+.paginationContainer {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -6,7 +6,7 @@
   gap: 10px;
   color: inherit;
 
-  & .pagination-button {
+  & .paginationButton {
     padding: 10px;
     border-radius: 5px;
     border: 1px solid black;

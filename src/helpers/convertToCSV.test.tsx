@@ -1,6 +1,5 @@
 import { convertToCSV } from './convertToCSV';
 import { Item } from './types';
-import { expect, test, describe } from 'vitest';
 
 describe('convertToCSV', () => {
   test('returns correct csv structure', () => {
