@@ -1,11 +1,13 @@
-import { Link, useParams, useSearchParams } from 'react-router';
 import { Spinner } from '../Spinner';
-import './details.css';
+import styles from './details.module.css';
 import { useGetStarwarsPerson } from './useGetStarwarsPerson';
+import { useRouter } from 'next/router';
+import { clsx } from '../../helpers/clsx';
+import { filterObjectKeys } from 'src/helpers/filterObjectKeys';
 
 export const Details = () => {
-  const { id } = useParams();
-  const [searchParams] = useSearchParams();
+  const router = useRouter();
+  const { query } = router;
 
   const {
     data: person,
@@ -14,11 +16,22 @@ export const Details = () => {
     isLoading,
     isUninitialized,
     error,
-  } = useGetStarwarsPerson(id as string);
+  } = useGetStarwarsPerson(query.details as string);
+
+  const onCloseDetails = () => {
+    router.push(
+      {
+        pathname: '/',
+        query: filterObjectKeys(router.query, (key) => key !== 'details'),
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
 
   if (isFetching || isLoading || isUninitialized) {
     return (
-      <div className="item-details">
+      <div className={clsx(styles.itemDetails, 'details')}>
         <Spinner />
       </div>
     );
@@ -34,7 +47,7 @@ export const Details = () => {
     };
 
     return (
-      <div className="item-details">
+      <div className={clsx(styles.itemDetails, 'details')}>
         <div>An error has occurred:</div>
         <div>{getErrorMessage()}</div>
       </div>
@@ -42,25 +55,27 @@ export const Details = () => {
   }
 
   return (
-    <div className="item-details">
-      <h4 className="item-details-label">{`Name: ${person.name}`}</h4>
-      <ul className="item-details-list">
-        <li className="item-details-point">{`Gender: ${person.gender}`}</li>
-        <li className="item-details-point">{`birth_year: ${person.birth_year}`}</li>
-        <li className="item-details-point">{`eye_color: ${person.eye_color}`}</li>
-        <li className="item-details-point">{`height: ${person.height}`}</li>
-        <li className="item-details-point">{`mass: ${person.mass}`}</li>
+    <div className={clsx(styles.itemDetails, 'details')}>
+      <h4>{`Name: ${person.name}`}</h4>
+      <ul className={styles.itemDetailsList}>
+        <li
+          className={styles.itemDetailsPoint}
+        >{`Gender: ${person.gender}`}</li>
+        <li
+          className={styles.itemDetailsPoint}
+        >{`birth_year: ${person.birth_year}`}</li>
+        <li
+          className={styles.itemDetailsPoint}
+        >{`eye_color: ${person.eye_color}`}</li>
+        <li
+          className={styles.itemDetailsPoint}
+        >{`height: ${person.height}`}</li>
+        <li className={styles.itemDetailsPoint}>{`mass: ${person.mass}`}</li>
       </ul>
-      <Link
-        to={{
-          pathname: `/`,
-          search: searchParams.toString(),
-        }}
-        className="item-details-link"
-      >
-        {' '}
-        Close{' '}
-      </Link>
+
+      <div className={styles.itemDetailsLink} onClick={onCloseDetails}>
+        Close
+      </div>
     </div>
   );
 };

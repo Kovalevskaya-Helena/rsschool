@@ -1,13 +1,23 @@
-import { expect, test, describe, vi, MockedFunction } from 'vitest';
-import { useSearchParams } from 'react-router';
 import { useGetStarWarsPeopleQuery } from '../redux/api';
 import { useGetStarWarsPeople } from './useGetStarWarsPeople';
 import { Item } from '../helpers/types';
+import { useRouter } from 'next/router';
 
-vi.mock('../redux/api');
-vi.mock('react-router');
+jest.mock('../redux/api');
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
+
+const mockPush = jest.fn();
 
 describe('useGetStarWarsPeople', () => {
+  beforeEach(() => {
+    (useRouter as jest.Mock).mockReturnValue({
+      query: { page: '1', search: 'Luke' },
+      push: mockPush,
+    });
+  });
   const expected = {
     data: {
       results: [] as Item[],
@@ -22,21 +32,17 @@ describe('useGetStarWarsPeople', () => {
 
   test('valid hook', () => {
     (
-      useGetStarWarsPeopleQuery as MockedFunction<
+      useGetStarWarsPeopleQuery as jest.MockedFn<
         () => Omit<ReturnType<typeof useGetStarWarsPeopleQuery>, 'refetch'>
       >
     ).mockReturnValue(expected);
-
-    (useSearchParams as MockedFunction<typeof useSearchParams>).mockReturnValue(
-      [new URLSearchParams(), () => void 0]
-    );
 
     const result = useGetStarWarsPeople();
 
     expect(result).toEqual(
       expect.objectContaining({
         ...expected,
-        query: {},
+        query: { page: '1', search: 'Luke' },
       })
     );
   });

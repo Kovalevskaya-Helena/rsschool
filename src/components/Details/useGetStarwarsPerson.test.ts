@@ -1,9 +1,8 @@
-import { expect, test, describe, vi, MockedFunction } from 'vitest';
 import { useGetStarwarsPersonQuery } from '../../redux/api';
 import { useGetStarwarsPerson } from './useGetStarwarsPerson';
 import { Item } from '../../helpers/types';
 
-vi.mock('../../redux/api');
+jest.mock('../../redux/api');
 
 describe('useGetStarwarsPerson', () => {
   const expected = {
@@ -17,7 +16,7 @@ describe('useGetStarwarsPerson', () => {
 
   test('valid hook', () => {
     (
-      useGetStarwarsPersonQuery as MockedFunction<
+      useGetStarwarsPersonQuery as jest.MockedFn<
         () => Omit<ReturnType<typeof useGetStarwarsPersonQuery>, 'refetch'>
       >
     ).mockReturnValue(expected);

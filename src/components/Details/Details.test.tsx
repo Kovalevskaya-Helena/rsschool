@@ -1,9 +1,8 @@
-import type { PropsWithChildren } from 'react';
-import { test, describe, vi, MockedFunction } from 'vitest';
 import { render } from '@testing-library/react';
 import { Details } from './Details';
 import { useGetStarwarsPerson } from './useGetStarwarsPerson';
 import { Item } from '../../helpers/types';
+import { useRouter } from 'next/router';
 
 const mockItem: Item = {
   birth_year: '',
@@ -15,18 +14,26 @@ const mockItem: Item = {
   url: '',
 };
 
-vi.mock('react-router', () => ({
-  useSearchParams: () => [''],
-  useParams: () => ({ id: '' }),
-  Link: (props: PropsWithChildren) => <a>{props.children}</a>,
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
 }));
 
-vi.mock('./useGetStarwarsPerson');
+jest.mock('./useGetStarwarsPerson');
+
+jest.mock('../../helpers/clsx', () => ({
+  clsx: jest.fn(),
+}));
 
 describe('Details', () => {
   test('Renders Spinner when isFetching is true', () => {
+    (useRouter as jest.Mock).mockReturnValue({
+      pathname: '/mocked-path',
+      query: { details: '123' },
+      push: jest.fn(),
+    });
+
     (
-      useGetStarwarsPerson as MockedFunction<typeof useGetStarwarsPerson>
+      useGetStarwarsPerson as jest.MockedFn<typeof useGetStarwarsPerson>
     ).mockReturnValue({
       data: mockItem,
       isFetching: true,
@@ -43,7 +50,7 @@ describe('Details', () => {
 
   test('Renders Spinner when isLoading is true', () => {
     (
-      useGetStarwarsPerson as MockedFunction<typeof useGetStarwarsPerson>
+      useGetStarwarsPerson as jest.MockedFn<typeof useGetStarwarsPerson>
     ).mockReturnValue({
       data: mockItem,
       isFetching: false,
@@ -60,7 +67,7 @@ describe('Details', () => {
 
   test('Renders Spinner when is isUninitialized true', () => {
     (
-      useGetStarwarsPerson as MockedFunction<typeof useGetStarwarsPerson>
+      useGetStarwarsPerson as jest.MockedFn<typeof useGetStarwarsPerson>
     ).mockReturnValue({
       data: mockItem,
       isFetching: false,
@@ -77,7 +84,7 @@ describe('Details', () => {
 
   test(`Renders message when is isError true and error don't has field 'message' `, () => {
     (
-      useGetStarwarsPerson as MockedFunction<typeof useGetStarwarsPerson>
+      useGetStarwarsPerson as jest.MockedFn<typeof useGetStarwarsPerson>
     ).mockReturnValue({
       data: mockItem,
       isFetching: false,
@@ -93,7 +100,7 @@ describe('Details', () => {
   });
   test(`Renders message when is isError true and error has field 'message' `, () => {
     (
-      useGetStarwarsPerson as MockedFunction<typeof useGetStarwarsPerson>
+      useGetStarwarsPerson as jest.MockedFn<typeof useGetStarwarsPerson>
     ).mockReturnValue({
       data: mockItem,
       isFetching: false,
@@ -109,7 +116,7 @@ describe('Details', () => {
   });
   test('Renders list when is isSuccessfull true', () => {
     (
-      useGetStarwarsPerson as MockedFunction<typeof useGetStarwarsPerson>
+      useGetStarwarsPerson as jest.MockedFn<typeof useGetStarwarsPerson>
     ).mockReturnValue({
       data: mockItem,
       isFetching: false,

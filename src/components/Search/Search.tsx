@@ -1,6 +1,6 @@
 import { FormEvent } from 'react';
 import { Button } from '../Button';
-import './search.css';
+import styles from './search.module.css';
 
 interface SearchProps {
   searchText: string;
@@ -15,14 +15,14 @@ export const Search = ({ searchText, onChangeText, onSearch }: SearchProps) => {
   };
 
   return (
-    <form className="search-container" onSubmit={onSubmit}>
+    <form className={styles.searchContainer} onSubmit={onSubmit}>
       <input
-        className="search-input"
+        className={styles.searchInput}
         placeholder={'search Star Wars...'}
         value={searchText}
         onChange={(event) => onChangeText(event.target.value)}
       />
-      <Button className="search-button" onClick={onSearch}>
+      <Button className={styles.searchButton} onClick={onSearch}>
         Search
       </Button>
     </form>

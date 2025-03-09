@@ -1,6 +1,6 @@
 import { Search } from '../Search';
 import { Theme } from '../Theme';
-import './header.css';
+import styles from './header.module.css';
 
 export interface HeaderProps {
   searchText: string;
@@ -9,10 +9,10 @@ export interface HeaderProps {
 }
 export const Header = ({ searchText, onChangeText, onSearch }: HeaderProps) => {
   return (
-    <div className="header-container">
-      <div className="header-wrapper">
+    <div className={styles.header_container}>
+      <div className={styles.header_wrapper}>
         <div />
-        <header className="header">Search app</header>
+        <header className={styles.header}>Search app</header>
         <Theme />
       </div>
       <Search

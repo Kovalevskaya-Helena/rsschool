@@ -1,7 +1,7 @@
 import { Button } from '../Button';
 import { convertToCSV } from '../../helpers/convertToCSV';
 import { Item } from '../../helpers/types';
-import './downloadbutton.css';
+import styles from './downloadbutton.module.css';
 
 interface DownloadButtonState {
   items: Item[];
@@ -10,7 +10,6 @@ interface DownloadButtonState {
 export const DownloadButton = ({ items }: DownloadButtonState) => {
   const downloadCSV = (items: Item[], filename: string) => {
     const csv = convertToCSV(items, ';');
-    console.log(csv.length);
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
 
@@ -26,7 +25,7 @@ export const DownloadButton = ({ items }: DownloadButtonState) => {
   };
 
   return (
-    <Button onClick={handleDownload} className="download-button">
+    <Button onClick={handleDownload} className={styles.download_button}>
       Download
     </Button>
   );

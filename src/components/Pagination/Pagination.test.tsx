@@ -1,10 +1,9 @@
 import { useGetStarWarsPeople } from '../../hooks/useGetStarWarsPeople';
 import { render, fireEvent } from '@testing-library/react';
-import { test, describe, vi, MockedFunction } from 'vitest';
 import { Pagination } from './Pagination';
 import { noop } from '../../helpers/noop';
 
-vi.mock('../../hooks/useGetStarWarsPeople');
+jest.mock('../../hooks/useGetStarWarsPeople');
 
 const mockData = {
   results: [
@@ -35,7 +34,7 @@ const mockData = {
 describe('Pagination', () => {
   test('pagination renders successfully', () => {
     (
-      useGetStarWarsPeople as MockedFunction<typeof useGetStarWarsPeople>
+      useGetStarWarsPeople as jest.MockedFn<typeof useGetStarWarsPeople>
     ).mockReturnValue({
       query: {},
       updateQuery: noop,
@@ -43,16 +42,17 @@ describe('Pagination', () => {
       isSuccess: true,
       isFetching: false,
       isError: false,
+      setQuery: noop,
     });
     const { getAllByRole } = render(<Pagination />);
     getAllByRole('button');
   });
 
   test('when click set correct query params', async () => {
-    const updateQuerySpy = vi.fn();
+    const updateQuerySpy = jest.fn();
 
     (
-      useGetStarWarsPeople as MockedFunction<typeof useGetStarWarsPeople>
+      useGetStarWarsPeople as jest.MockedFn<typeof useGetStarWarsPeople>
     ).mockReturnValue({
       query: {},
       updateQuery: updateQuerySpy,
@@ -64,6 +64,7 @@ describe('Pagination', () => {
       isSuccess: true,
       isFetching: false,
       isError: false,
+      setQuery: jest.fn(),
     });
 
     const { getByRole } = render(<Pagination />);
@@ -73,18 +74,18 @@ describe('Pagination', () => {
 
     await fireEvent.click(nextButton);
 
-    expect(updateQuerySpy).toHaveBeenCalledWith('page', '2');
+    expect(updateQuerySpy).toHaveBeenCalledWith({ page: '2' });
 
     await fireEvent.click(prevButton);
 
-    expect(updateQuerySpy).toHaveBeenCalledWith('page', '1');
+    expect(updateQuerySpy).toHaveBeenCalledWith({ page: '1' });
   });
 
   test(`when click with invalid url doesn't set query params`, async () => {
-    const updateQuerySpy = vi.fn();
+    const updateQuerySpy = jest.fn();
 
     (
-      useGetStarWarsPeople as MockedFunction<typeof useGetStarWarsPeople>
+      useGetStarWarsPeople as jest.MockedFn<typeof useGetStarWarsPeople>
     ).mockReturnValue({
       query: {},
       updateQuery: updateQuerySpy,
@@ -96,6 +97,7 @@ describe('Pagination', () => {
       isSuccess: true,
       isFetching: false,
       isError: false,
+      setQuery: noop,
     });
 
     const { getByRole } = render(<Pagination />);
@@ -113,10 +115,10 @@ describe('Pagination', () => {
   });
 
   test(`when click with invalid page doesn't set query params`, async () => {
-    const updateQuerySpy = vi.fn();
+    const updateQuerySpy = jest.fn();
 
     (
-      useGetStarWarsPeople as MockedFunction<typeof useGetStarWarsPeople>
+      useGetStarWarsPeople as jest.MockedFn<typeof useGetStarWarsPeople>
     ).mockReturnValue({
       query: {},
       updateQuery: updateQuerySpy,
@@ -128,6 +130,7 @@ describe('Pagination', () => {
       isSuccess: true,
       isFetching: false,
       isError: false,
+      setQuery: noop,
     });
 
     const { getByRole } = render(<Pagination />);

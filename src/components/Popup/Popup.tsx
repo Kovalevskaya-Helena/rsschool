@@ -7,7 +7,7 @@ import {
 } from '../../redux/selectedItemsSlice';
 import { clsx } from '../../helpers/clsx';
 
-import './popup.css';
+import styles from './popup.module.css';
 
 export const Popup = () => {
   const dispatch = useDispatch();
@@ -18,15 +18,17 @@ export const Popup = () => {
   return (
     <div
       className={clsx(
-        'popup-container',
-        Boolean(selectedItemsAmount) && 'visible'
+        styles.popupContainer,
+        Boolean(selectedItemsAmount) && styles.visible
       )}
     >
-      <div className="popup-label">{`Selected ${selectedItemsAmount} items`}</div>
-      <div className="popup-box">
+      <div
+        className={styles.popupLabel}
+      >{`Selected ${selectedItemsAmount} items`}</div>
+      <div className={styles.popupBox}>
         <Button
           onClick={() => dispatch(unSelectAllItems())}
-          className="popup-button"
+          className={styles.popupButton}
         >
           Unselect all
         </Button>

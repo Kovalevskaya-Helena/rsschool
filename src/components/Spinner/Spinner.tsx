@@ -1,9 +1,9 @@
-import './spinner.css';
+import styles from './spinner.module.css';
 
 export const Spinner = () => {
   return (
-    <div className="lds-css" data-testid="spinner">
-      <div className="lds-double-ring">
+    <div className={styles.ldsCss} data-testid="spinner">
+      <div className={styles.ldsDoubleRing}>
         <div></div>
         <div></div>
       </div>

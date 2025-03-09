@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { clsx } from '../../helpers/clsx';
-import './button.css';
+import styles from './button.module.css';
 
 export const Button = ({
   children,
@@ -17,7 +17,7 @@ export const Button = ({
 }) => {
   return (
     <button
-      className={clsx('button', disabled && 'disabled', className)}
+      className={clsx(styles.button, disabled && styles.disabled, className)}
       type="button"
       onClick={onClick}
       disabled={disabled}

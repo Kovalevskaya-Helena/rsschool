@@ -1,21 +1,19 @@
-import type { PropsWithChildren } from 'react';
 import { render } from '@testing-library/react';
-import { expect, test, describe, vi, MockedFunction } from 'vitest';
 import { List } from '.';
 import { useGetStarWarsPeople } from '../../hooks/useGetStarWarsPeople';
 import { noop } from '../../helpers/noop';
 
-vi.mock('react-router', () => ({
-  useSearchParams: () => [''],
-  Link: (props: PropsWithChildren) => <a>{props.children}</a>,
-}));
-
-vi.mock('react-redux', () => ({
-  useDispatch: vi.fn(),
+jest.mock('react-redux', () => ({
+  useDispatch: jest.fn(),
   useSelector: () => [],
+  useStore: jest.fn(),
 }));
 
-vi.mock('../../hooks/useGetStarWarsPeople');
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
+
+jest.mock('../../hooks/useGetStarWarsPeople');
 
 const mockData = {
   results: [
@@ -35,7 +33,7 @@ const mockData = {
       height: '10',
       mass: '13',
       eye_color: 'green',
-      url: '/13223',
+      url: '/13227',
     },
   ],
   next: '',
@@ -53,7 +51,7 @@ const mockDataEmpty = {
 describe('List', () => {
   test('List renders successfully', () => {
     (
-      useGetStarWarsPeople as MockedFunction<typeof useGetStarWarsPeople>
+      useGetStarWarsPeople as jest.MockedFn<typeof useGetStarWarsPeople>
     ).mockReturnValue({
       query: {},
       updateQuery: noop,
@@ -61,6 +59,7 @@ describe('List', () => {
       isSuccess: true,
       isFetching: false,
       isError: false,
+      setQuery: noop,
     });
     const { getAllByRole } = render(<List />);
 
@@ -70,7 +69,7 @@ describe('List', () => {
 
   test('When gets empty people list then renders the placeholder', () => {
     (
-      useGetStarWarsPeople as MockedFunction<typeof useGetStarWarsPeople>
+      useGetStarWarsPeople as jest.MockedFn<typeof useGetStarWarsPeople>
     ).mockReturnValue({
       query: {},
       updateQuery: noop,
@@ -78,6 +77,7 @@ describe('List', () => {
       isSuccess: true,
       isFetching: false,
       isError: false,
+      setQuery: noop,
     });
     const { queryByRole, getByText } = render(<List />);
 
@@ -86,7 +86,7 @@ describe('List', () => {
   });
   test('Renders Spinner when isFetching is true', () => {
     (
-      useGetStarWarsPeople as MockedFunction<typeof useGetStarWarsPeople>
+      useGetStarWarsPeople as jest.MockedFn<typeof useGetStarWarsPeople>
     ).mockReturnValue({
       query: {},
       updateQuery: noop,
@@ -94,6 +94,7 @@ describe('List', () => {
       isSuccess: true,
       isFetching: true,
       isError: false,
+      setQuery: noop,
     });
     const { getByTestId } = render(<List />);
 
@@ -101,7 +102,7 @@ describe('List', () => {
   });
   test('Renders message when is isError true', () => {
     (
-      useGetStarWarsPeople as MockedFunction<typeof useGetStarWarsPeople>
+      useGetStarWarsPeople as jest.MockedFn<typeof useGetStarWarsPeople>
     ).mockReturnValue({
       query: {},
       updateQuery: noop,
@@ -109,6 +110,7 @@ describe('List', () => {
       isSuccess: true,
       isFetching: false,
       isError: true,
+      setQuery: noop,
     });
     const { getByText } = render(<List />);
 

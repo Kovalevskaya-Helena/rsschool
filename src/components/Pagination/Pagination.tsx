@@ -1,7 +1,7 @@
 import { useGetStarWarsPeople } from '../../hooks/useGetStarWarsPeople';
 import { Button } from '../Button';
 
-import './pagination.css';
+import styles from './pagination.module.css';
 
 export const Pagination = () => {
   const {
@@ -18,14 +18,14 @@ export const Pagination = () => {
     const page = new URLSearchParams(new URL(url).searchParams).get('page');
     if (!page) return;
 
-    updateQuery('page', page);
+    updateQuery({ page });
   };
 
   return (
-    <div className="pagination-container">
+    <div className={styles.paginationContainer}>
       <Button
         ariaLabel="previous"
-        className="pagination-button"
+        className={styles.paginationButton}
         disabled={previous === null}
         onClick={() => onPagination(previous as string | null)}
       >
@@ -36,7 +36,7 @@ export const Pagination = () => {
       </div>
       <Button
         ariaLabel="next"
-        className="pagination-button"
+        className={styles.paginationButton}
         disabled={next === null}
         onClick={() => onPagination(next as string | null)}
       >

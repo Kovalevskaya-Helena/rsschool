@@ -1,11 +1,12 @@
 import { List } from '../List';
 import { Popup } from '../Popup';
-import './main.css';
+import styles from './main.module.css';
 import { Pagination } from '../Pagination';
+
 export const Main = () => {
   return (
-    <div className="main-container">
-      <header className="main-header">Results</header>
+    <div className={styles.mainContainer}>
+      <header className={styles.mainHeader}>Results</header>
       <List />
       <Pagination />
       <Popup />

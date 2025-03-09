@@ -1,19 +1,28 @@
-import { Outlet } from 'react-router';
-import { useState } from 'react';
-import { PeopleSearch } from '../PeopleSearch';
-import { ThemeContext, type Theme } from '../../helpers/contexts';
-import './layout.css';
 import { clsx } from '../../helpers/clsx';
+import Head from 'next/head';
+import styles from './layout.module.css';
+import { useContext } from 'react';
+import { ThemeContext } from 'src/helpers/contexts';
+import { useRouter } from 'next/router';
 
-export const Layout = () => {
-  const [theme, setTheme] = useState<Theme>('dark');
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const { theme } = useContext(ThemeContext);
+  const router = useRouter();
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      <div className={clsx('layout', theme === 'light' && 'light')}>
-        <PeopleSearch />
-        <Outlet />
-      </div>
-    </ThemeContext.Provider>
+    <>
+      <Head>
+        <meta name="description" content="Search Starwars People" />
+      </Head>
+      <main
+        className={clsx(
+          styles.layout,
+          theme === 'light' && styles.light,
+          router.query.details && styles.expanded
+        )}
+      >
+        {children}
+      </main>
+    </>
   );
-};
+}

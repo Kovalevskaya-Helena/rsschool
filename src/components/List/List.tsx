@@ -1,10 +1,10 @@
-import { Link, useSearchParams } from 'react-router';
-import './list.css';
+import styles from './list.module.css';
 import { parseId } from './parseId';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleItem, getSelectedItems } from '../../redux/selectedItemsSlice';
 import { useGetStarWarsPeople } from '../../hooks/useGetStarWarsPeople';
 import { Spinner } from '../Spinner';
+import { useRouter } from 'next/router';
 
 export interface ListProps {
   previous: string | null;
@@ -12,7 +12,7 @@ export interface ListProps {
 }
 
 export const List = () => {
-  const [searchParams] = useSearchParams();
+  const router = useRouter();
   const {
     data: { results: people = [] } = {},
     isSuccess,
@@ -22,36 +22,44 @@ export const List = () => {
   const dispatch = useDispatch();
   const selectedItems = useSelector(getSelectedItems);
 
+  const onOpenDetails = (id: string) => {
+    router.push(
+      {
+        pathname: '/',
+        query: { ...router.query, details: id },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
   if (isSuccess && people.length === 0) {
     return (
-      <div className="details-list-wrapper">
+      <div className={styles.details_list_wrapper}>
         <span>Nothing was found</span>
       </div>
     );
   }
 
   return (
-    <div className="details-list-wrapper">
+    <div className={styles.details_list_wrapper}>
       {isFetching && <Spinner />}
-      {isError && <span className="errorText">Something were wrong ...</span>}
+      {isError && <span>Something were wrong ...</span>}
       {!isFetching && !isError && isSuccess && (
-        <ul className="details-list" data-testid="details-list">
+        <ul className={styles.details_list} data-testid="details-list">
           {people.map((person) => (
-            <li key={person.url} className="details-item">
+            <li key={person.url} className={styles.details_item}>
               <input
                 type="checkbox"
                 checked={person.url in selectedItems}
                 onChange={() => dispatch(toggleItem(person))}
               />
-              <Link
-                to={{
-                  pathname: `/details/${parseId(person.url)}`,
-                  search: searchParams.toString(),
-                }}
-                className="details-link"
+              <span
+                className={styles.details_link}
+                onClick={() => onOpenDetails(parseId(person.url))}
               >
                 {person.name}
-              </Link>
+              </span>
             </li>
           ))}
         </ul>

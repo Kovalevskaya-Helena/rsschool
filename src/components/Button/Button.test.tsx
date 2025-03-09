@@ -1,16 +1,17 @@
-import { expect, test, describe, vi } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import { Button } from '.';
 
 describe('Button', () => {
   test('Render the button', () => {
-    const { getByRole } = render(<Button onClick={vi.fn()}>My Button</Button>);
+    const { getByRole } = render(
+      <Button onClick={jest.fn()}>My Button</Button>
+    );
     getByRole('button');
   });
 
   test('When gets truthly disabled then render disabled button', () => {
     const { getByRole } = render(
-      <Button onClick={vi.fn()} disabled>
+      <Button onClick={jest.fn()} disabled>
         My Button
       </Button>
     );
@@ -19,7 +20,7 @@ describe('Button', () => {
   });
 
   test('When the buttons is clicked then onClick is invoked', async () => {
-    const onClick = vi.fn();
+    const onClick = jest.fn();
 
     const { getByRole } = render(<Button onClick={onClick}>My Button</Button>);
 

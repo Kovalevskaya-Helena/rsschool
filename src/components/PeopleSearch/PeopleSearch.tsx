@@ -3,34 +3,32 @@ import { Header } from '../Header';
 import { Main } from '../Main/Main';
 import { ErrorButton } from '../ErrorButton';
 import { useLocalStorage } from '../../helpers/useLocalStorage';
-import './peopleSearch.css';
-import { useNavigate, useSearchParams, useParams } from 'react-router';
+import styles from './peopleSearch.module.css';
+import { useRouter } from 'next/router';
+import { useGetStarWarsPeople } from '../../hooks/useGetStarWarsPeople';
+import { clsx } from '../../helpers/clsx';
+import { filterObjectKeys } from 'src/helpers/filterObjectKeys';
 
 export const PeopleSearch = () => {
-  const searchTextStorage = useLocalStorage('label');
+  const router = useRouter();
 
-  const initialSearchText = searchTextStorage.getItem() ?? '';
-
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { id } = useParams();
-  const navigate = useNavigate();
-
-  const [searchText, setSearchText] = useState<string>(initialSearchText);
+  const searchTextStorage = useLocalStorage('userSearch');
+  const [searchText, setSearchText] = useState<string>(
+    searchTextStorage.getItem() ?? ''
+  );
+  const { updateQuery, setQuery } = useGetStarWarsPeople();
 
   useEffect(() => {
-    const label = searchTextStorage.getItem();
-    if (label) {
-      setSearchParams((prev) => {
-        prev.set('search', label);
-        prev.set('page', '1');
-        return prev;
+    const searchCached = searchTextStorage.getItem();
+    const searchCurrent = router.query.search;
+
+    if (searchCached && searchCached !== searchCurrent) {
+      updateQuery({
+        search: searchCached,
+        page: '1',
       });
     }
   }, []);
-
-  const setCacheToLocalStorage = (value: string) => {
-    searchTextStorage.setItem(value.trim());
-  };
 
   const onChangeSearch = (text: string) => {
     setSearchText(text);
@@ -38,33 +36,32 @@ export const PeopleSearch = () => {
 
   const onSearchStart = () => {
     const nextSearch = searchText.trim();
-    setCacheToLocalStorage(nextSearch);
+    searchTextStorage.setItem(nextSearch);
 
-    setSearchParams((prev) => {
-      if (nextSearch) {
-        prev.set('search', nextSearch);
-      } else {
-        prev.delete('search');
-      }
-
-      prev.set('page', '1');
-      return prev;
+    setQuery({
+      ...filterObjectKeys(router.query, (key) => key !== 'search'),
+      ...(nextSearch && { search: nextSearch }),
+      page: '1',
     });
   };
 
   const closeDetails = () => {
-    const isDetailsOpened = id !== undefined;
+    const isDetailsOpened = router.query.details;
 
     if (isDetailsOpened) {
-      navigate({
-        pathname: `/`,
-        search: searchParams.toString(),
-      });
+      router.push(
+        {
+          pathname: '/',
+          query: filterObjectKeys(router.query, (key) => key !== 'details'),
+        },
+        undefined,
+        { shallow: true }
+      );
     }
   };
 
   return (
-    <div className="container" onClick={closeDetails}>
+    <div className={clsx(styles.container, 'container')} onClick={closeDetails}>
       <Header
         searchText={searchText}
         onChangeText={onChangeSearch}

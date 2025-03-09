@@ -1,10 +1,10 @@
-.search-container {
+.searchContainer {
   display: flex;
   flex-direction: raw;
   gap: 10px;
 }
 
-.search-input {
+.searchInput {
   width: 300px;
   font-size: 13px;
   padding: 6px 0 4px 10px;
@@ -13,7 +13,7 @@
   border-radius: 8px;
 }
 
-.search-button {
+.searchButton {
   padding: 10px;
   border-radius: 5px;
   border: 1px solid black;
