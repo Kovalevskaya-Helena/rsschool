@@ -26,10 +26,16 @@ const sortStrategies: Record<string, SortStrategy> = {
   alphabetDesc: (countryA: Country, countryB: Country) => (countryB.name.common.localeCompare(countryA.name.common)),
 } as const;
 
+const getCardsFromLocalStorage = () => {
+  const storedCards = localStorage.getItem('selectedCards');
+  return storedCards ? JSON.parse(storedCards) : [];
+};
+
 export const App = () => {
   const [searchFilter, setSearchFilter] = useState<string>('');
   const [regionFilter, setRegionFilter] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('populationAsc');
+  const [selectedCards, setSelectedCards] = useState<string[]>([]);
 
   const dispatch: AppDispatch = useDispatch();
   const countries = useSelector(getAllCountries);
@@ -47,8 +53,10 @@ export const App = () => {
   ];
 
   useEffect(() => {
-    dispatch(fetchAllCountries())
+    dispatch(fetchAllCountries());
+    setSelectedCards(getCardsFromLocalStorage());
   }, []);
+
 
   const regionFitlerStrategy = filterStrategies[regionFilter === 'all' ? 'all' : 'default'];
   const filterBySearch = (country: Country) => country.name.common.toLowerCase().includes(searchFilter.toLowerCase());
@@ -60,6 +68,13 @@ export const App = () => {
     .filter(fitlerByRegion)
     .toSorted(sortByStrategy);
 
+
+  const onHighlightCard = (item: Country) => {
+    const nextCards = [...selectedCards, item.name.common];
+    setSelectedCards(nextCards);
+    localStorage.setItem('selectedCards', JSON.stringify(nextCards));
+  }
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.box}>
@@ -67,7 +82,7 @@ export const App = () => {
         <Dropdown value={regionFilter} items={arrayOfRegions} onChange={(item) => setRegionFilter(item.id)} />
         <Dropdown value={sortBy} items={optionsForSort} onChange={(item) => setSortBy(item.id)} />
       </div>
-      <CardList items={filteredCountries} />
+      <CardList items={filteredCountries} onHighlightCard={onHighlightCard} selectedCards={selectedCards} />
     </div>
   );
 };
