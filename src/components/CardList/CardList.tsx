@@ -15,7 +15,7 @@ export const CardList: FunctionComponent<CardListProps> = ({ items, selectedCard
 
   return (<div className={styles.wrapper}>
     {items.map((item) => {
-      return <Card item={item} onHighlightCard={onHighlightCard} isSelected={selectedCards.includes(item.name.common)} />
+      return <Card key={item.name.common} item={item} onHighlightCard={onHighlightCard} isSelected={selectedCards.includes(item.name.common)} />
     })}
   </div>)
 

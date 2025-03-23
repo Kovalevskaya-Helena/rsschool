@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { CardList } from "../CardList";
@@ -9,22 +9,6 @@ import { fetchAllCountries, getAllCountries, type Country } from "../../store/co
 import { AppDispatch } from "../../store/store";
 
 import styles from './app.module.css';
-
-type FitlerStrategy = (country: Country, filter: string) => boolean;
-
-const filterStrategies: Record<string, FitlerStrategy> = {
-  all: () => true,
-  default: (country: Country, fitler: string) => country.region.toLowerCase() === fitler.toLowerCase()
-} as const;
-
-type SortStrategy = (countryA: Country, countryB: Country) => number;
-
-const sortStrategies: Record<string, SortStrategy> = {
-  populationAsc: (countryA: Country, countryB: Country) => (countryA.population - countryB.population),
-  populationDesc: (countryA: Country, countryB: Country) => (countryB.population - countryA.population),
-  alphabetAsc: (countryA: Country, countryB: Country) => (countryA.name.common.localeCompare(countryB.name.common)),
-  alphabetDesc: (countryA: Country, countryB: Country) => (countryB.name.common.localeCompare(countryA.name.common)),
-} as const;
 
 const getCardsFromLocalStorage = () => {
   const storedCards = localStorage.getItem('selectedCards');
@@ -40,10 +24,14 @@ export const App = () => {
   const dispatch: AppDispatch = useDispatch();
   const countries = useSelector(getAllCountries);
 
-  const arrayOfRegions = [
-    { id: 'all', label: 'All' },
-    ...countries.map(({ region }) => ({ id: region, label: region }))
-  ];
+  const arrayOfRegions = useMemo(() => {
+    const regionsUnique = [...new Set(countries.map(({ region }) => region))];
+
+    return [
+      { id: 'all', label: 'All' },
+      ...regionsUnique.map((region) => ({ id: region, label: region }))
+    ];
+  }, [countries]);
 
   const optionsForSort = [
     { id: 'populationAsc', label: 'By population ascending' },
@@ -57,16 +45,17 @@ export const App = () => {
     setSelectedCards(getCardsFromLocalStorage());
   }, []);
 
-
-  const regionFitlerStrategy = filterStrategies[regionFilter === 'all' ? 'all' : 'default'];
-  const filterBySearch = (country: Country) => country.name.common.toLowerCase().includes(searchFilter.toLowerCase());
-  const fitlerByRegion = (country: Country) => regionFitlerStrategy(country, regionFilter);
-  const sortByStrategy = (countryA: Country, countryB: Country) => sortStrategies[sortBy](countryA, countryB);
-
   const filteredCountries = countries
-    .filter(filterBySearch)
-    .filter(fitlerByRegion)
-    .toSorted(sortByStrategy);
+    .filter((country: Country) => country.name.common.toLowerCase().includes(searchFilter.toLowerCase()))
+    .filter((country: Country) => regionFilter === 'all' ? country : country.region.toLowerCase() === regionFilter.toLowerCase())
+    .toSorted((countryA: Country, countryB: Country) => {
+      if (sortBy === 'populationAsc') return countryA.population - countryB.population;
+      if (sortBy === 'populationDesc') return countryB.population - countryA.population;
+      if (sortBy === 'alphabetAsc') return countryA.name.common.localeCompare(countryB.name.common);
+      if (sortBy === 'alphabetDesc') return countryB.name.common.localeCompare(countryA.name.common);
+
+      return 0;
+    });
 
 
   const onHighlightCard = (item: Country) => {
@@ -75,12 +64,20 @@ export const App = () => {
     localStorage.setItem('selectedCards', JSON.stringify(nextCards));
   }
 
+  const handleSortChange = useCallback((item: { id: string }) => {
+    setSortBy(item.id)
+  }, [setSortBy]);
+
+  const handleRegionChange = useCallback((item: { id: string }) => {
+    setRegionFilter(item.id)
+  }, [setRegionFilter]);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.box}>
         <Search value={searchFilter} onChange={(value) => setSearchFilter(value)} />
-        <Dropdown value={regionFilter} items={arrayOfRegions} onChange={(item) => setRegionFilter(item.id)} />
-        <Dropdown value={sortBy} items={optionsForSort} onChange={(item) => setSortBy(item.id)} />
+        <Dropdown value={regionFilter} items={arrayOfRegions} onChange={handleRegionChange} />
+        <Dropdown value={sortBy} items={optionsForSort} onChange={handleSortChange} />
       </div>
       <CardList items={filteredCountries} onHighlightCard={onHighlightCard} selectedCards={selectedCards} />
     </div>

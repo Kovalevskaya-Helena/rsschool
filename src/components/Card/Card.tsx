@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'react'
 import styles from './card.module.css'
 import { Country } from '../../store/countrySlice';
+import { memo } from 'react';
 
 import { clsx } from '../../helpers/clsx';
-
 
 interface CardProps {
   item: Country;
@@ -11,7 +11,7 @@ interface CardProps {
   onHighlightCard: (item: Country) => void;
 }
 
-export const Card: FunctionComponent<CardProps> = ({ item, isSelected, onHighlightCard }) => {
+export const Card: FunctionComponent<CardProps> = memo(({ item, isSelected, onHighlightCard }) => {
 
   const { flags: { png }, name: { common }, population, region } = item;
 
@@ -25,4 +25,4 @@ export const Card: FunctionComponent<CardProps> = ({ item, isSelected, onHighlig
       </div>
     </div>
   )
-}
+});
